@@ -1,0 +1,239 @@
+<h2 class="text-center">New Invoice</h2>
+<div class="container mt">
+  <form>
+    <h4>From</h4>
+    <mat-form-field class="full-width" appearance="fill">
+      <mat-label>Name</mat-label>
+      <input
+        [(ngModel)]="createform.fromname"
+        type="text"
+        name="sendername"
+        [(ngModel)]="createform.fromname"
+        matInput
+        placeholder="Your Name"
+        required
+      />
+    </mat-form-field>
+    <mat-form-field class="full-width" appearance="fill">
+      <mat-label>Address</mat-label>
+      <input
+        [(ngModel)]="createform.fromaddress"
+        id="senderaddress"
+        name="senderaddress"
+        [(ngModel)]="createform.fromaddress"
+        matInput
+        placeholder="5th Avenue, XYZ Street"
+        required
+      />
+    </mat-form-field>
+
+    <h4>To</h4>
+    <mat-form-field class="full-width" appearance="fill">
+      <mat-label>Name</mat-label>
+      <input
+        [(ngModel)]="createform.toname"
+        id="receivername"
+        name="receivername"
+        matInput
+        placeholder="Receiver Name"
+        required
+      />
+    </mat-form-field>
+    <mat-form-field class="full-width" appearance="fill">
+      <mat-label>Address</mat-label>
+      <input
+        [(ngModel)]="createform.toaddress"
+        id="receiveraddress"
+        name="receiveraddress"
+        matInput
+        placeholder="5th Avenue, XYZ Street"
+        required
+      />
+    </mat-form-field>
+
+    <!-- <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <ng-container matColumnDef="itemNo">
+                <th mat-header-cell *matHeaderCellDef> No. </th>
+                <td mat-cell *matCellDef="let element"> 
+                    {{element.itemNo}}
+                 </td>
+              </ng-container>      
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      
+        </table> -->
+
+    <h4>Items</h4>
+    <section *ngFor="let item of createform.items; let i = index">
+      <h5>Item {{ i + 1 }}</h5>
+      <div class="items-list">
+        <mat-form-field appearance="fill">
+          <mat-label>Item No.</mat-label>
+          <input
+            name="itemNo_{{ item.itemId }}"
+            [(ngModel)]="item.itemNo"
+            id="itemNo"
+            name="itemNo"
+            matInput
+            required
+          />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field appearance="fill">
+          <mat-label>Item Name</mat-label>
+          <input
+            name="itemName_{{ item.itemId }}"
+            [(ngModel)]="item.itemName"
+            id="itemName"
+            name="itemName"
+            matInput
+            required
+          />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field appearance="fill">
+          <mat-label>Quantity</mat-label>
+          <input
+            name="itemQuantity_{{ item.itemId }}"
+            [(ngModel)]="item.itemQuantity"
+            id="quantity"
+            name="quantity"
+            matInput
+            required
+          />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field appearance="fill">
+          <mat-label>Price</mat-label>
+          <input
+            name="itemPrice_{{ item.itemId }}"
+            [(ngModel)]="item.itemPrice"
+            id="price"
+            name="price"
+            matInput
+            required
+          />
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field appearance="fill">
+          <mat-label>Total</mat-label>
+          <input
+            name="itemTotal_{{ item.itemId }}"
+            [(ngModel)]="item.itemTotal"
+            id="total"
+            disabled
+            matInput
+          />
+        </mat-form-field>
+        &nbsp;
+        <button mat-raised-button color="warn" (click)="removeItem(i)">
+          Remove
+        </button>
+      </div>
+    </section>
+    <button mat-raised-button (click)="calculateTotal()">
+      Calculate Total
+    </button>
+    &nbsp;
+    <button mat-raised-button color="primary" (click)="addMoreItems()">
+      Add More
+    </button>
+    <br>
+    <br>
+    <div class="indent-1">
+      <section class="float-child">
+        <mat-form-field appearance="fill">
+          <mat-label>Note</mat-label>
+          <textarea name="note" [(ngModel)]="createform.note" id="note" matInput>
+          </textarea>
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="fill">
+            <mat-label>Date</mat-label>
+            <input required name="orderdate" [(ngModel)]="createform.orderdate" matInput [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>          
+        <br>
+        <button class="big-save-button" (click)="saveNewInvoice()" mat-raised-button color="accent">
+            Save
+        </button>
+      </section>
+      <section class="float-child">
+        <mat-form-field appearance="fill">
+          <mat-label>Subtotal</mat-label>
+          <input
+            [(ngModel)]="createform.subtotal"
+            id="subtotal"
+            value="{{ createform.subtotal }}"
+            matInput
+            (change)="calculateTaxAmount()"
+            name="subtotal"
+            required
+          />
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="fill">
+            <mat-label>Tax Rate (%)</mat-label>
+            <input
+              [(ngModel)]="createform.taxpercent"
+              id="taxrate"
+              matInput
+              name="taxrate"
+              placeholder="10 or 5 or 2"
+              (change)="calculateTaxAmount()"
+              required
+            />
+          </mat-form-field>
+          <br>
+        <mat-form-field appearance="fill">
+            <mat-label>Tax Amount</mat-label>
+            <input
+              [(ngModel)]="createform.taxamount"
+              id="taxamount"
+              matInput
+              name="taxamount"
+              required
+              disabled
+            />
+          </mat-form-field>
+          <br>
+        <mat-form-field appearance="fill">
+            <mat-label>Total Amount</mat-label>
+            <input
+              [(ngModel)]="createform.total"
+              id="total"
+              matInput
+              name="total"
+              required
+              disabled
+            />
+          </mat-form-field>
+          <br>
+        <mat-form-field appearance="fill">
+            <mat-label>Amount Paid</mat-label>
+            <input
+              [(ngModel)]="createform.amountpaid"
+              id="amountpaid"
+              matInput
+              name="amountpaid"
+              (change)="getAmountDue()"
+              required
+            />
+          </mat-form-field>
+          <br>
+        <mat-form-field appearance="fill">
+            <mat-label>Amount Due</mat-label>
+            <input
+              [(ngModel)]="createform.amountdue"
+              id="amountdue"
+              matInput
+              name="amountdue"
+              required
+              disabled
+            />
+          </mat-form-field>
+      </section>
+    </div>
+  </form>
+</div>
