@@ -1,3 +1,4 @@
+<mat-progress-bar *ngIf="progress" mode="indeterminate"></mat-progress-bar>
 <div>
     <h2>Existing Records</h2> 
     <span class="example-spacer"></span>
@@ -11,30 +12,35 @@
     <!-- order id -->
     <ng-container matColumnDef="order_id">
       <th mat-header-cell *matHeaderCellDef> Id </th>
-      <td mat-cell *matCellDef="let element"> {{element.order_id}} </td>
+      <td mat-cell *matCellDef="let element"> {{element._id.substr(19)}} </td>
     </ng-container>
   
     <!-- Name Column -->
     <ng-container matColumnDef="order_receiver_name">
       <th mat-header-cell *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.order_receiver_name}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.orderReceiverName}} </td>
     </ng-container>
   
     <!-- Weight Column -->
     <ng-container matColumnDef="order_date">
       <th mat-header-cell *matHeaderCellDef> Date </th>
-      <td mat-cell *matCellDef="let element"> {{element.order_date}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.orderDate.substr(0, 10)}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="total">
+      <th mat-header-cell *matHeaderCellDef> Total </th>
+      <td mat-cell *matCellDef="let element"> {{(element.totalBeforeTax + (element.totalBeforeTax*(element.taxPercent/100)))}} </td>
     </ng-container>
 
     <ng-container matColumnDef="order_amount_paid">
         <th mat-header-cell *matHeaderCellDef> Amount Paid </th>
-        <td mat-cell *matCellDef="let element"> {{element.order_amount_paid}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.amountPaid}} </td>
       </ng-container>
   
     <!-- Symbol Column -->
     <ng-container matColumnDef="order_total_amount_due">
       <th mat-header-cell *matHeaderCellDef> Amount Due </th>
-      <td mat-cell *matCellDef="let element"> {{element.order_total_amount_due}} </td>
+      <td mat-cell *matCellDef="let element"> {{(element.totalBeforeTax + (element.totalBeforeTax*(element.taxPercent/100))) - element.amountPaid}} </td>
     </ng-container>
 
     <ng-container matColumnDef="actions">

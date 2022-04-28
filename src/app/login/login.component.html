@@ -1,3 +1,4 @@
+<mat-progress-bar *ngIf="isInProgress" mode="indeterminate"></mat-progress-bar>
 <div class="bootstrap-wrapper">
     <div class="container mt">
         <div class="row">
@@ -6,14 +7,14 @@
                 <h4 class="warn">{{warning}}</h4>
                 <form (ngSubmit)="onSubmit()">
                     <mat-form-field class="full-width">
-                        <mat-label>Username</mat-label>
-                        <input name="username"
-                        [(ngModel)]="credentials.username"
+                        <mat-label>Email</mat-label>
+                        <input name="email"
+                        [(ngModel)]="credentials.email"
                          required type="text" matInput />
                     </mat-form-field>
                     <mat-form-field class="full-width">
                         <mat-label>Password</mat-label>
-                        <input name="username" [(ngModel)]="credentials.password" required type="password" matInput />
+                        <input name="password" [(ngModel)]="credentials.password" required type="password" matInput />
                     </mat-form-field>
 
                     <div class="container text-center">

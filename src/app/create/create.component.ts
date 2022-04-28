@@ -1,5 +1,9 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {ItemModel} from 'src/app/ItemModel'
+import { environment } from 'src/environments/environment';
+import { LoginService } from '../services/login.service';
 
 const ELEMENT_DATA: ItemModel[] = [];
 
@@ -13,32 +17,36 @@ export class CreateComponent implements OnInit {
   createform = {
     fromname:'',
     fromaddress:'',
-    toname:'',
-    toaddress:'',
-    subtotal:0,
-    taxpercent:0,
+    orderReceiverName:'',
+    orderReceiverAddress:'',
+    totalBeforeTax:0,
+    taxPercent:0,
     taxamount:0,
     total:0,
-    amountpaid:0,
+    amountPaid:0,
     amountdue:0,
     note:'',
-    orderdate:'',
+    orderDate:'',
     items: [{
       itemId:1,
       itemNo:'',
-      itemName:'',
-      itemQuantity:'',
-      itemPrice:'',
+      name:'',
+      quantity:'',
+      price:'',
       itemTotal:''
     }]
   }
 
-  constructor() { }
+  saveDisable=false;
+
+  constructor(private http: HttpClient, private router: Router, private loginService: LoginService) { 
+    this.saveDisable=false;
+  }
 
   ngOnInit(): void {
   }
 
-  displayedColumns: string[] = ['itemNo', 'itemName', 'itemQuantity', 'itemPrice', 'total'];
+  displayedColumns: string[] = ['itemNo', 'name', 'quantity', 'price', 'total'];
 
   dataSource = ELEMENT_DATA;
   addMoreItems() {
@@ -46,30 +54,30 @@ export class CreateComponent implements OnInit {
     this.createform.items.push({
       itemId:this.createform.items.length+1,
       itemNo:'',
-      itemName:'',
-      itemQuantity:'',
-      itemPrice:'',
+      name:'',
+      quantity:'',
+      price:'',
       itemTotal:''
     });
   }
 
   calculateTotal() {
     for (let i=0; i<this.createform.items.length; i++) {
-      // console.log('(this.createform.items[i].itemQuantity)', (this.createform.items[i].itemQuantity));
-      // console.log('(this.createform.items[i].itemQuantity)', typeof(this.createform.items[i].itemQuantity));
+      // console.log('(this.createform.items[i].quantity)', (this.createform.items[i].quantity));
+      // console.log('(this.createform.items[i].quantity)', typeof(this.createform.items[i].quantity));
       
-      if ((this.createform.items[i].itemQuantity)!=='' && this.createform.items[i].itemPrice!=='')
-        this.createform.items[i].itemTotal = (parseFloat(this.createform.items[i].itemQuantity)*parseFloat(this.createform.items[i].itemPrice)).toString();
+      if ((this.createform.items[i].quantity)!=='' && this.createform.items[i].price!=='')
+        this.createform.items[i].itemTotal = (parseFloat(this.createform.items[i].quantity)*parseFloat(this.createform.items[i].price)).toString();
     }
     this.calculateSubtotal();
   }
 
   calculateSubtotal() {
-    this.createform.subtotal=0;
+    this.createform.totalBeforeTax=0;
     for (let i=0; i<this.createform.items.length; i++) {
       // console.log('this.createform.items[i].itemTotal ', typeof this.createform.items[i].itemTotal);
       if (this.createform.items[i].itemTotal !== 'NaN' && this.createform.items[i].itemTotal !== '')
-        this.createform.subtotal += parseFloat(this.createform.items[i].itemTotal);
+        this.createform.totalBeforeTax += parseFloat(this.createform.items[i].itemTotal);
     }
   }
 
@@ -82,27 +90,48 @@ export class CreateComponent implements OnInit {
   }
 
   calculateTaxAmount() {
-    this.createform.taxamount = this.createform.subtotal * (this.createform.taxpercent/100);
+    this.createform.taxamount = this.createform.totalBeforeTax * (this.createform.taxPercent/100);
     this.calculateTotalAmount();
   }
 
   calculateTotalAmount() {
     console.log('this.createform.total ', this.createform.total);
     
-    this.createform.total = +this.createform.subtotal + +this.createform.taxamount;
+    this.createform.total = +this.createform.totalBeforeTax + +this.createform.taxamount;
     console.log('this.createform.total ', this.createform.total);
 
   }
 
   getAmountDue() {
-    this.createform.amountdue = this.createform.total - this.createform.amountpaid;
+    this.createform.amountdue = this.createform.total - this.createform.amountPaid;
   }
 
   saveNewInvoice() {
+    this.saveDisable=true;
     this.seeData();
+    // let headers = new HttpHeaders();
+    // let token = `Bearer ${localStorage.getItem("Token")}`;
+    // headers = headers.set('Authorization', token.toString());
+    // // console.log(headers);
+    this.loginService.doSaveInvoice(this.createform).subscribe(
+      (response)=>{
+        console.log("response from /api/invoice is ", response);
+        this.navigateToHome();
+      }, (error)=>{
+        this.saveDisable=false;
+        console.log("error from /api/invoice is ", error);
+        this.loginService.logoutUser();
+        this.router.navigate(['/']);
+        location.reload();
+      }
+    );
   }
 
   seeData() {
     console.log(this.createform);
+  }
+
+  navigateToHome() {
+    this.router.navigate(['/']);
   }
 }

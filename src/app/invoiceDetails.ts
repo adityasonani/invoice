@@ -9,5 +9,6 @@ export interface InvoiceDetails {
     order_tax_per: string,
     order_amount_paid: number,
     order_total_amount_due: number,
-    actions: boolean
+    actions: boolean,
+    total: number
 }

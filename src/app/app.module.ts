@@ -21,6 +21,10 @@ import {MatTableModule} from '@angular/material/table';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { LoginService } from './services/login.service';
+import { AuthGuard } from './services/auth.guard';
+import { AuthInterceptor } from './services/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -46,9 +50,10 @@ import {MatNativeDateModule} from '@angular/material/core';
     MatTableModule,
     MatIconModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [LoginService, AuthGuard, [{provide:HTTP_INTERCEPTORS, useClass:AuthInterceptor, multi:true}]],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

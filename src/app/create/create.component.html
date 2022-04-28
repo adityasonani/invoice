@@ -31,9 +31,9 @@
     <mat-form-field class="full-width" appearance="fill">
       <mat-label>Name</mat-label>
       <input
-        [(ngModel)]="createform.toname"
-        id="receivername"
-        name="receivername"
+        [(ngModel)]="createform.orderReceiverName"
+        id="orderReceiverName"
+        name="orderReceiverName"
         matInput
         placeholder="Receiver Name"
         required
@@ -42,9 +42,9 @@
     <mat-form-field class="full-width" appearance="fill">
       <mat-label>Address</mat-label>
       <input
-        [(ngModel)]="createform.toaddress"
-        id="receiveraddress"
-        name="receiveraddress"
+        [(ngModel)]="createform.orderReceiverAddress"
+        id="orderReceiverAddress"
+        name="orderReceiverAddress"
         matInput
         placeholder="5th Avenue, XYZ Street"
         required
@@ -82,10 +82,10 @@
         <mat-form-field appearance="fill">
           <mat-label>Item Name</mat-label>
           <input
-            name="itemName_{{ item.itemId }}"
-            [(ngModel)]="item.itemName"
-            id="itemName"
-            name="itemName"
+            name="name_{{ item.itemId }}"
+            [(ngModel)]="item.name"
+            id="name"
+            name="name"
             matInput
             required
           />
@@ -94,8 +94,8 @@
         <mat-form-field appearance="fill">
           <mat-label>Quantity</mat-label>
           <input
-            name="itemQuantity_{{ item.itemId }}"
-            [(ngModel)]="item.itemQuantity"
+            name="quantity_{{ item.itemId }}"
+            [(ngModel)]="item.quantity"
             id="quantity"
             name="quantity"
             matInput
@@ -106,8 +106,8 @@
         <mat-form-field appearance="fill">
           <mat-label>Price</mat-label>
           <input
-            name="itemPrice_{{ item.itemId }}"
-            [(ngModel)]="item.itemPrice"
+            name="price_{{ item.itemId }}"
+            [(ngModel)]="item.price"
             id="price"
             name="price"
             matInput
@@ -150,12 +150,12 @@
         <br>
         <mat-form-field appearance="fill">
             <mat-label>Date</mat-label>
-            <input required name="orderdate" [(ngModel)]="createform.orderdate" matInput [matDatepicker]="picker">
+            <input required name="orderDate" [(ngModel)]="createform.orderDate" matInput [matDatepicker]="picker">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>          
         <br>
-        <button class="big-save-button" (click)="saveNewInvoice()" mat-raised-button color="accent">
+        <button [disabled]="saveDisable" class="big-save-button" (click)="saveNewInvoice()" mat-raised-button color="accent">
             Save
         </button>
       </section>
@@ -163,12 +163,12 @@
         <mat-form-field appearance="fill">
           <mat-label>Subtotal</mat-label>
           <input
-            [(ngModel)]="createform.subtotal"
-            id="subtotal"
-            value="{{ createform.subtotal }}"
+            [(ngModel)]="createform.totalBeforeTax"
+            id="totalBeforeTax"
+            value="{{ createform.totalBeforeTax }}"
             matInput
             (change)="calculateTaxAmount()"
-            name="subtotal"
+            name="totalBeforeTax"
             required
           />
         </mat-form-field>
@@ -176,7 +176,7 @@
         <mat-form-field appearance="fill">
             <mat-label>Tax Rate (%)</mat-label>
             <input
-              [(ngModel)]="createform.taxpercent"
+              [(ngModel)]="createform.taxPercent"
               id="taxrate"
               matInput
               name="taxrate"
@@ -213,10 +213,10 @@
         <mat-form-field appearance="fill">
             <mat-label>Amount Paid</mat-label>
             <input
-              [(ngModel)]="createform.amountpaid"
-              id="amountpaid"
+              [(ngModel)]="createform.amountPaid"
+              id="amountPaid"
               matInput
-              name="amountpaid"
+              name="amountPaid"
               (change)="getAmountDue()"
               required
             />

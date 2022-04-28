@@ -1,12 +1,10 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 import { InvoiceDetails } from '../invoiceDetails';
-
-const DummyInvoiceData: InvoiceDetails[] = [
-  {order_id: 1, user_id: 382, order_date: '10/03/2022 12:27', order_receiver_name: 'aditya', order_receiver_address: 'shahpur', order_total_before_tax:80000, order_tax_per:'938', order_amount_paid:20000, order_total_amount_due:60000, actions: true},
-  {order_id: 2, user_id: 38, order_date: '10/03/2022 12:27', order_receiver_name: 'aditya', order_receiver_address: 'shahpur', order_total_before_tax:80000, order_tax_per:'938', order_amount_paid:20000, order_total_amount_due:60000, actions: true},
-  {order_id: 3, user_id: 3823, order_date: '10/03/2022 12:27', order_receiver_name: 'aditya', order_receiver_address: 'shahpur', order_total_before_tax:80000, order_tax_per:'938', order_amount_paid:20000, order_total_amount_due:60000, actions: true},
-]
+import { LoginService } from '../services/login.service';
+import { VerifytokenService } from '../services/verifytoken.service'
 
 @Component({
   selector: 'app-dashboard',
@@ -16,12 +14,38 @@ const DummyInvoiceData: InvoiceDetails[] = [
 
 export class DashboardComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  progress=false;
+
+  DummyInvoiceData: InvoiceDetails[] = [
+  ];
+
+  dataSource:any[]=[];
+
+  constructor(private router: Router, private http: HttpClient, private loginService: LoginService) { 
+    // console.log("const called ");
+    this.reloadPage();
+  }
 
   ngOnInit(): void {
+    this.progress=true;
+    let uri = environment.BASE_URL + '/api/invoice/all';
+    this.http.get(uri).subscribe(
+      (response:any)=>{
+        console.log('response from /invoice/all is ', response);
+        this.progress=false;
+        this.DummyInvoiceData = response.data;
+        console.log("dummy invoice data ", this.DummyInvoiceData);
+        this.dataSource = this.DummyInvoiceData;
+        console.log("datasource ", this.dataSource);
+        console.log(this.dataSource[0].amountPaid.$numberDecimal);
+      },
+      (error)=>{
+        this.progress=false;
+        console.log('error from /invoice/all is ', error);
+      }
+    );
   }
-  displayedColumns: string[] = ['order_id', 'order_receiver_name', 'order_date', 'order_amount_paid', 'order_total_amount_due', 'actions'];
-  dataSource = DummyInvoiceData;
+  displayedColumns: string[] = ['order_id', 'order_receiver_name', 'order_date', 'total', 'order_amount_paid', 'order_total_amount_due', 'actions'];
 
   deleteRecord(id:number) {
     console.log('id to delete is ', id);
@@ -33,5 +57,18 @@ export class DashboardComponent implements OnInit {
 
   editRecord(order_id:number) {
     console.log(order_id);
+  }
+
+  reloadPage() {
+    if(window.localStorage )
+    {
+      if(!localStorage.getItem('firstLoad'))
+      {
+        localStorage['firstLoad'] = true;
+        window.location.reload();
+      }  
+      else
+        localStorage.removeItem('firstLoad');
+    }
   }
 }

@@ -1,3 +1,5 @@
+<mat-progress-bar *ngIf="isProgress" mode="indeterminate"></mat-progress-bar>
+
 <div class="bootstrap-wrapper">
     <div class="container mt">
         <div class="row">
@@ -6,49 +8,43 @@
                 <h3 class="warn"> {{warning}} </h3>
                 <form (ngSubmit)="onSubmit()">
                     <mat-form-field class="full-width">
-                        <mat-label>First Name</mat-label>
-                        <input name="firstName"
-                        [(ngModel)]="credentials.firstname"
+                        <mat-label>Name</mat-label>
+                        <input name="name"
+                        [(ngModel)]="credentials.name"
                          required type="text" matInput />
                     </mat-form-field>
-                    <mat-form-field class="full-width">
-                        <mat-label>Last Name</mat-label>
-                        <input name="firstName"
-                        [(ngModel)]="credentials.lastname"
-                         required type="text" matInput />
-                    </mat-form-field>
-                    <mat-form-field class="full-width">
-                        <mat-label>Phone Number</mat-label>
-                        <input name="phonenumber"
-                        [(ngModel)]="credentials.phonenumber"
-                         required type="tel" matInput />
-                    </mat-form-field>
-                    <mat-form-field class="full-width">
-                        <mat-label>Address</mat-label>
-                        <input name="address"
-                        [(ngModel)]="credentials.address"
-                         required type="text" matInput />
-                    </mat-form-field>
+
                     <mat-form-field class="full-width">
                         <mat-label>Email</mat-label>
                         <input name="email"
                         [(ngModel)]="credentials.email"
                          required type="email" matInput />
                     </mat-form-field>
+
                     <mat-form-field class="full-width">
-                        <mat-label>Username</mat-label>
-                        <input name="username"
-                        [(ngModel)]="credentials.username"
+                        <mat-label>Phone Number</mat-label>
+                        <input name="phonenumber"
+                        [(ngModel)]="credentials.phonenumber"
+                         required type="tel" matInput />
+                    </mat-form-field>
+
+                    <mat-form-field class="full-width">
+                        <mat-label>Address</mat-label>
+                        <input name="address"
+                        [(ngModel)]="credentials.address"
                          required type="text" matInput />
                     </mat-form-field>
+                    
                     <mat-form-field class="full-width">
                         <mat-label>Password</mat-label>
                         <input name="username" [(ngModel)]="credentials.password" required type="password" matInput />
                     </mat-form-field>
+
                     <mat-form-field class="full-width">
                         <mat-label>Confirm Password</mat-label>
                         <input name="username" [(ngModel)]="confirmPassword" required type="password" matInput />
                     </mat-form-field>
+
                     <div class="container text-center">
                         <button type="submit" color="primary" mat-raised-button>
                             Register
